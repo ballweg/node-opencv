@@ -1,6 +1,7 @@
 var cv = require('../lib/opencv');
 
 var color = [255,0,0];
+var color2 = [255,255,0];
 
 try{
   var camera = new cv.VideoCapture(1);
@@ -20,6 +21,7 @@ try{
             var face = faces[i];
             im.rectangle([face.x, face.y], [face.width, face.height], color, 2);
             drawCrossHairs(im);
+            drawGrid(im, 3);
             var q = whichQuadrant(im, face.x, face.y);
             drawVector(im, q);
             console.log("quad: "+ q);
@@ -90,7 +92,16 @@ function drawVector(im, q){
       vector = [im.width()/2+100, im.height()/2+100];
       break;
   }
-  im.line(origin, vector, color, 2);
+  im.line(origin, vector, color2, 2);
+}
+
+// Draw an overlay grid. "Segments" is on each side. If you want a 3x3 (9 grid)
+// enter "3" for segments. You can't do different numbers for x and y for now.
+function drawGrid(im, segments){
+  for (var i = 1; i < segments; i++) {
+    im.line([im.width()/segments*i, 0], [im.width()/segments*i, im.height()], color, 2);
+    im.line([0, im.height()/segments*i], [im.width(), im.height()/segments*i], color2, 2);
+  }
 }
 
 // cv.readImage("./files/people.jpg", function(err, im){

@@ -2,6 +2,7 @@ var cv = require('../lib/opencv');
 
 var color = [255,0,0];
 var color2 = [255,255,0];
+var black = [50,50,50];
 
 try{
   var camera = new cv.VideoCapture(1);
@@ -10,6 +11,8 @@ try{
     camera.read(function(err, im){
       if(err) throw err;
       if (im.width() > 0 && im.height() > 0){
+        drawCrossHairs(im);
+        drawGrid(im, 3);
         im.detectObject('../data/haarcascade_mcs_eyepair_big.xml', {}, function(err, faces) {
           if (err) throw err;
           if(faces.length > 0){
@@ -19,14 +22,12 @@ try{
           }
           for (var i = 0; i < faces.length; i++) {
             var face = faces[i];
-            im.rectangle([face.x, face.y], [face.width, face.height], color, 2);
-            drawCrossHairs(im);
-            drawGrid(im, 3);
-            var q = whichQuadrant(im, face.x, face.y);
+            im.rectangle([face.x, face.y], [face.width, face.height], black, 2);
+            var q = whichQuadrant(im, face);
             drawVector(im, q);
             console.log("quad: "+ q);
-            window.show(im);
           }
+          window.show(im);
         });
       }
 
@@ -43,9 +44,12 @@ try{
 }
 
 // takes two inputs and finds which quadrant they're in.
-function whichQuadrant(im, x, y){
+function whichQuadrant(im, object){
   var im_width = im.width();
   var im_height = im.height();
+  var x = object.x+(object.width/2);
+  var y = object.y+(object.height/2);
+  im.line([x, y], [x,y], color2, 3);
   if(x < (im_width/2)){
     // left side
     if(y <= im_height/2){
@@ -69,9 +73,9 @@ function whichQuadrant(im, x, y){
 }
 
 function drawCrossHairs(im){
-  var size = 50;
-  im.line([im.width()/2-size, im.height()/2], [im.width()/2+size,im.height()/2], color, 2);
-  im.line([im.width()/2, im.height()/2-size], [im.width()/2,im.height()/2+size], color, 2);
+  var size = 25;
+  im.line([im.width()/2-size, im.height()/2], [im.width()/2+size,im.height()/2], color, 1);
+  im.line([im.width()/2, im.height()/2-size], [im.width()/2,im.height()/2+size], color, 1);
   return im;
 }
 
@@ -99,9 +103,14 @@ function drawVector(im, q){
 // enter "3" for segments. You can't do different numbers for x and y for now.
 function drawGrid(im, segments){
   for (var i = 1; i < segments; i++) {
-    im.line([im.width()/segments*i, 0], [im.width()/segments*i, im.height()], color, 2);
-    im.line([0, im.height()/segments*i], [im.width(), im.height()/segments*i], color2, 2);
+    im.line([im.width()/segments*i, 0], [im.width()/segments*i, im.height()], black, 1);
+    im.line([0, im.height()/segments*i], [im.width(), im.height()/segments*i], black, 1);
   }
+}
+
+function positionCamera(im){
+  var x_servo_range = [0,90];
+  var y_servo_range = [0,90];
 }
 
 // cv.readImage("./files/people.jpg", function(err, im){

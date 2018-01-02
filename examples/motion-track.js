@@ -2,7 +2,8 @@ var path = require('path'),
     cv = require('../lib/opencv');
 
 // When opening a file, the full path must be passed to opencv
-var vid = new cv.VideoCapture(path.join(__dirname, 'files', 'motion.mov'));
+// var vid = new cv.VideoCapture(path.join(__dirname, 'files', 'motion.mov'));
+var vid = new cv.VideoCapture(1);
 
 vid.read(function(err, mat){
   if (err) throw err;

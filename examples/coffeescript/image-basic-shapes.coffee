@@ -1,4 +1,4 @@
-cv = require('opencv')
+cv = require('../../lib/opencv')
 
 
 cv.readImage("./images/mona.png", (err, im) ->

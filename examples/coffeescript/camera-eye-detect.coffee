@@ -29,11 +29,19 @@ intervalId = setInterval(()->
     # is already available and has a width and height greater than 0,
     # otherwise it will fail when trying to do namedWindow.show()
     # and the image has width or height equal or less than 0.
+
+    console.log "Image Size: " + im.width() + "x" + im.height()
+
+    #draw centerpoint
+    im.line([im.width()/2, im.height()/2+50], [(im.width()/2), (im.height()/2-50)], [255,249,125], 1)
+    im.line([im.width()/2+50, im.height()/2], [(im.width()/2-50), (im.height()/2)], [255,249,125], 1)
+
     if im.width() > 0 and im.height() > 0
       im.detectObject('/Users/jeff/Sites/node-opencv/data/haarcascade_mcs_eyepair_big.xml', {}, (err, faces) ->
         for face in faces
           console.log face
           im.rectangle([face.x, face.y], [face.width, face.height], [0,255,0], 2)
+          whichQuadrant(face)
 
         # We use the previously created namedWindow to display the
         # video frame to wich we applied the blur and filter.
@@ -48,3 +56,9 @@ intervalId = setInterval(()->
     if res >= 0 then clearInterval(intervalId)
   )
 , 150)
+
+# Detects which quadrant the (first) face is located in
+function whichQuadrant(face){
+  console.log("found at: " + face.x +"x"+ face.y)
+  return q;
+}

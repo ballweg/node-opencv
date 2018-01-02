@@ -1,4 +1,4 @@
-cv = require 'opencv'
+cv = require '../../lib/opencv'
 
 # First we create a new VideoCapture object to get
 # video from the camera (0 for default camera)

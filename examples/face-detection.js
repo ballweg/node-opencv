@@ -1,6 +1,6 @@
 var cv = require('../lib/opencv');
 
-cv.readImage("./files/mona.png", function(err, im){
+cv.readImage("./files/people.jpg", function(err, im){
   if (err) throw err;
   if (im.width() < 1 || im.height() < 1) throw new Error('Image has no size');
 
